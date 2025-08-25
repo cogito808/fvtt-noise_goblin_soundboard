@@ -1,3 +1,3 @@
-# fvtt-soundboard
+# fvtt-noise_goblin_soundboard
 TBD
 

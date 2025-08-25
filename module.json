@@ -1,6 +1,6 @@
 {
-    "id": "fvtt-soundboard",
-    "title": "Simple Soundboard",
+    "id": "fvtt-noise_goblin_soundboard",
+    "title": "Noise Goblin Soundboard",
     "description": "Soundboard.",
     "version": "1.0.0",
     "esmodules": [
