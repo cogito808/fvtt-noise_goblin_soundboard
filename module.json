@@ -1,10 +1,11 @@
 {
     "id": "fvtt-noise_goblin_soundboard",
     "title": "Noise Goblin Soundboard",
-    "description": "Soundboard.",
+    "description": "Soundboard",
     "version": "1.0.0",
     "esmodules": [
-        "scripts/fvtt-soundboard.js"
+        "./scripts/soundboard.js",
+        "./scripts/soundboard-app.js"
     ],
     "compatibility": {
         "minimum": "13.344",

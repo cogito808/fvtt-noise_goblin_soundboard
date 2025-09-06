@@ -1,0 +1,19 @@
+{{#each sounds}}
+<div class="sb-sound-category">
+  <h3>{{categoryName}}</h3>
+  {{#each files}}
+  <div class="sb-sound-container">
+    <div class="sb-sound-header">
+      <span class="sb-sound-name">{{name}}</span>
+      <button class="sb-play-button" data-path="{{path}}">▶️</button>
+      <button class="sb-loop-toggle" data-fn="">🔁</button>
+      <button class="sb-fav-toggle" data-fn="">
+        <i class="far fa-star"></i>
+      </button>
+      <button class="sb-options-toggle" data-path="{{path}}">⚙️</button>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/each}}
+```
