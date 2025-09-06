@@ -8,12 +8,12 @@ export const SoundBoard = {
   volumeMode: 'default',
 
   async loadSoundsFromDirectory(directoryPath) {
-    const filePicker = await FilePicker.browse('data', directoryPath);
+    const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', directoryPath);
     const folders = filePicker.dirs;
     const sounds = {};
 
     for (const folder of folders) {
-      const folderPicker = await FilePicker.browse('data', folder);
+      const folderPicker = await foundry.applications.apps.FilePicker.implementation.browse('data', folder);
       const files = folderPicker.files.filter(f => f.endsWith('.mp3') || f.endsWith('.ogg') || f.endsWith('.wav'));
       const fileObjects = files.map(f => ({
         name: decodeURIComponent(f.split('/').pop()),

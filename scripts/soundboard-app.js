@@ -25,7 +25,7 @@ class SoundBoardApplication extends Application {
 
       html.find('.sb-play-button').on('click', function () {
         const path = $(this).data('path');
-        AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop: false}, true);
+        foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop: false}, true);
       });
     });
   }
@@ -93,7 +93,7 @@ class SoundBoardApplication extends Application {
       removeFavFn: ''
     };
 
-    const html = await renderTemplate('modules/fvtt-noise_goblin_soundboard/templates/extendedoptions.html', context);
+    const html = await foundry.applications.handlebars.renderTemplate('modules/fvtt-noise_goblin_soundboard/templates/extendedoptions.html', context);
     container.append(html);
   }
 }
