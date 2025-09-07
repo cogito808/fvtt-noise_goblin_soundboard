@@ -19,13 +19,21 @@ class SoundBoardApplication extends Application {
       const opacity = game.settings.get('fvtt-noise_goblin_soundboard', 'opacity');
       html.css('opacity', opacity);
 
-      html.find('.sb-options-toggle').on('click', function () {
-        SoundBoardApplication.toggleExtendedOptions(this, $(this).data('path'));
+      html.find('.sb-stop-button').on('click', function () {
+        const path = $(this).data('path');
+        const sound = SoundBoard.playingSounds?.[path];
+        if (sound && typeof sound.stop === 'function') {
+          sound.stop();
+          delete SoundBoard.playingSounds[path];
+        } else {
+          console.warn(`No valid sound instance found for path: ${path}`);
+        }
       });
 
-      html.find('.sb-play-button').on('click', function () {
+      html.find('.sb-play-button').on('click', async function () {
         const path = $(this).data('path');
-        foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop: false}, true);
+        const sound = await foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop: false}, true);
+        SoundBoard.playingSounds[path] = sound;
       });
     });
   }
@@ -68,35 +76,7 @@ class SoundBoardApplication extends Application {
       isExampleAudio
     };
   }
-
-  static async toggleExtendedOptions(element, identifyingPath, favTab) {
-    if (!identifyingPath) return;
-    const container = $(element).closest('.sb-sound-container');
-    const existing = container.find('.sb-extended-option-container');
-
-    if (existing.length > 0) {
-      existing.fadeOut(300, function () {
-        $(this).remove();
-      });
-      return;
-    }
-
-    const sound = SoundBoard.getSoundFromIdentifyingPath(identifyingPath);
-    const context = {
-      identifyingPath,
-      loopClass: '',
-      loopFn: '',
-      star: 'far fa-star',
-      favoriteFn: '',
-      delayValue: 0,
-      delayClass: 'hidden',
-      removeFavFn: ''
-    };
-
-    const html = await foundry.applications.handlebars.renderTemplate('modules/fvtt-noise_goblin_soundboard/templates/extendedoptions.html', context);
-    container.append(html);
-  }
-}
+} 
 
 window.SoundBoardApplication = SoundBoardApplication;
 

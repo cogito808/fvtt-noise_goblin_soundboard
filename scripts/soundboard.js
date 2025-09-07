@@ -2,6 +2,7 @@
 
 export const SoundBoard = {
   sounds: {},
+  playingSounds: {},
   targetedPlayerID: null,
   cacheMode: false,
   macroMode: false,
