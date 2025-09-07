@@ -5,7 +5,7 @@ import { SoundBoard } from './soundboard.js';
 class SoundBoardApplication extends Application {
   static get defaultOptions() {
     const options = super.defaultOptions;
-    options.title = `🔊${game.i18n.localize('SOUNDBOARD.app.title')}`;
+    options.title = `🔊${game?.i18n?.localize?.('SOUNDBOARD.app.title') ?? 'Soundboard'}`;
     options.id = 'soundboard-app';
     options.template = 'modules/fvtt-noise_goblin_soundboard/templates/soundboard.html';
     options.resizable = true;
@@ -150,14 +150,9 @@ Hooks.once('init', () => {
   game.soundboardApp = new SoundBoardApplication();
 });
 
-Hooks.once('ready', () => {
-  // Remove auto-render on ready
-  // game.soundboardApp.render(true);
-});
-
-// Macro to open the soundboard manually
-// You can paste this into a macro and run it to open the soundboard
-if (!game.soundboardApp) {
-  game.soundboardApp = new SoundBoardApplication();
-}
-game.soundboardApp.render(true);
+// Hooks.once('ready', () => {
+//   if (!game.soundboardApp) {
+//     game.soundboardApp = new SoundBoardApplication();
+//   }
+//   game.soundboardApp.render(true);
+// });
