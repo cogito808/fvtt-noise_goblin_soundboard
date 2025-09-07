@@ -32,8 +32,47 @@ class SoundBoardApplication extends Application {
 
       html.find('.sb-play-button').on('click', async function () {
         const path = $(this).data('path');
-        const sound = await foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop: false}, true);
+        const loop = SoundBoard.loopingSounds?.[path] ?? false;
+        const sound = await foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop}, true);
         SoundBoard.playingSounds[path] = sound;
+      });
+
+      html.find('.sb-loop-toggle').each(function () {
+        const button = $(this);
+        const path = button.data('path');
+
+        button.on('click', async function () {
+          console.log('Loop toggle clicked for path:', path);
+
+          if (!path) {
+            ui.notifications.warn("No valid sound path found for loop toggle.");
+            return;
+          }
+
+          const current = SoundBoard.loopingSounds?.[path] ?? false;
+          const newLoopState = !current;
+          SoundBoard.loopingSounds[path] = newLoopState;
+
+          // Update button UI
+          button.toggleClass('active', newLoopState);
+
+          // Stop current sound if playing
+          const currentSound = SoundBoard.playingSounds?.[path];
+          if (currentSound && typeof currentSound.stop === 'function') {
+            currentSound.stop();
+            delete SoundBoard.playingSounds[path];
+          }
+
+          // Replay with new loop state
+          const newSound = await foundry.audio.AudioHelper.play({
+            src: path,
+            volume: 1.0,
+            autoplay: true,
+            loop: newLoopState
+          }, true);
+
+          SoundBoard.playingSounds[path] = newSound;
+        });
       });
     });
   }

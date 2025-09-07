@@ -7,6 +7,7 @@ export const SoundBoard = {
   cacheMode: false,
   macroMode: false,
   volumeMode: 'default',
+  loopingSounds: {},
 
   async loadSoundsFromDirectory(directoryPath) {
     const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', directoryPath);
@@ -24,6 +25,7 @@ export const SoundBoard = {
     }
 
     this.sounds = sounds;
+    console.log('Loaded sounds:', this.sounds);
   },
 
   getSoundFromIdentifyingPath(path) {
