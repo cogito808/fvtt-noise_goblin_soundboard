@@ -151,5 +151,13 @@ Hooks.once('init', () => {
 });
 
 Hooks.once('ready', () => {
-  game.soundboardApp.render(true);
+  // Remove auto-render on ready
+  // game.soundboardApp.render(true);
 });
+
+// Macro to open the soundboard manually
+// You can paste this into a macro and run it to open the soundboard
+if (!game.soundboardApp) {
+  game.soundboardApp = new SoundBoardApplication();
+}
+game.soundboardApp.render(true);
