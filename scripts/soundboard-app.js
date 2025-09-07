@@ -19,6 +19,20 @@ class SoundBoardApplication extends Application {
       const opacity = game.settings.get('fvtt-noise_goblin_soundboard', 'opacity');
       html.css('opacity', opacity);
 
+      html.find('.sb-search-input').on('input', function () {
+        const query = $(this).val().toLowerCase();
+        html.find('.sb-sound-container').each(function () {
+          const name = $(this).find('.sb-sound-name').text().toLowerCase();
+          $(this).toggle(name.includes(query));
+        });
+      });
+
+      html.find('.sb-fav-toggle').on('click', function () {
+        const path = $(this).data('path');
+        SoundBoard.toggleFavorite(path);
+        $(this).toggleClass('active');
+      });
+
       html.find('.sb-stop-button').on('click', function () {
         const path = $(this).data('path');
         const sound = SoundBoard.playingSounds?.[path];
@@ -53,17 +67,14 @@ class SoundBoardApplication extends Application {
           const newLoopState = !current;
           SoundBoard.loopingSounds[path] = newLoopState;
 
-          // Update button UI
           button.toggleClass('active', newLoopState);
 
-          // Stop current sound if playing
           const currentSound = SoundBoard.playingSounds?.[path];
           if (currentSound && typeof currentSound.stop === 'function') {
             currentSound.stop();
             delete SoundBoard.playingSounds[path];
           }
 
-          // Replay with new loop state
           const newSound = await foundry.audio.AudioHelper.play({
             src: path,
             volume: 1.0,
@@ -115,44 +126,6 @@ class SoundBoardApplication extends Application {
       isExampleAudio
     };
   }
-} 
+}
 
 window.SoundBoardApplication = SoundBoardApplication;
-
-Hooks.once('init', () => {
-  game.settings.register('fvtt-noise_goblin_soundboard', 'soundboardServerVolume', {
-    name: 'Server Volume',
-    hint: 'Default volume level for sounds played from the server.',
-    scope: 'world',
-    config: false,
-    type: Number,
-    default: 0.8
-  });
-
-  game.settings.register('fvtt-noise_goblin_soundboard', 'soundboardDirectory', {
-    name: 'Soundboard Directory',
-    hint: 'Path to the folder containing sound files.',
-    scope: 'world',
-    config: true,
-    type: String,
-    default: 'modules/fvtt-noise_goblin_soundboard/assets/sounds'
-  });
-
-  game.settings.register('fvtt-noise_goblin_soundboard', 'opacity', {
-    name: 'Soundboard Opacity',
-    hint: 'Opacity level for the soundboard UI.',
-    scope: 'world',
-    config: true,
-    type: Number,
-    default: 1.0
-  });
-
-  game.soundboardApp = new SoundBoardApplication();
-});
-
-// Hooks.once('ready', () => {
-//   if (!game.soundboardApp) {
-//     game.soundboardApp = new SoundBoardApplication();
-//   }
-//   game.soundboardApp.render(true);
-// });
