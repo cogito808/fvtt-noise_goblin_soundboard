@@ -5,20 +5,22 @@
 {{#each sounds}}
 <div class="sb-sound-category">
   <h3>{{categoryName}}</h3>
-  {{#each files}}
-  <div class="sb-sound-container">
-    <div class="sb-sound-row">
-      <span class="sb-sound-name">{{name}}</span>
-      <div class="sb-sound-controls">
-        <button class="sb-play-button" data-path="{{path}}">▶️</button>
-        <button class="sb-stop-button" data-path="{{path}}">⏹️</button>
-        <button class="sb-loop-toggle" data-path="{{path}}">🔁</button>
-        <button class="sb-fav-toggle" data-path="{{path}}">
-          <i class="far fa-star"></i>
-        </button>
+  <div class="sb-sound-grid">
+    {{#each files}}
+    <div class="sb-sound-container">
+      <div class="sb-sound-row">
+        <span class="sb-sound-name">{{name}}</span>
+        <div class="sb-sound-controls">
+          <button class="sb-play-button" data-path="{{path}}">▶️</button>
+          <button class="sb-stop-button" data-path="{{path}}">⏹️</button>
+          <button class="sb-loop-toggle" data-path="{{path}}">🔁</button>
+          <button class="sb-fav-toggle" data-path="{{path}}">
+            <i class="far fa-star"></i>
+          </button>
+        </div>
       </div>
     </div>
+    {{/each}}
   </div>
-  {{/each}}
 </div>
 {{/each}}
