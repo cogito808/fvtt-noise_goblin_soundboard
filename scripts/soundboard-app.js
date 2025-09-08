@@ -5,7 +5,7 @@ import { SoundBoard } from './soundboard.js';
 class SoundBoardApplication extends Application {
   static get defaultOptions() {
     const options = super.defaultOptions;
-    options.title = `🔊${game?.i18n?.localize?.('SOUNDBOARD.app.title') ?? 'Soundboard'}`;
+    options.title = `🔊Noise Goblin Soundboard`;
     options.id = 'soundboard-app';
     options.template = 'modules/fvtt-noise_goblin_soundboard/templates/soundboard.html';
     options.resizable = true;
