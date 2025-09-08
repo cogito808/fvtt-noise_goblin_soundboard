@@ -13,6 +13,7 @@ class SoundBoardApplication extends Application {
   }
 
   async render(force = false, options = {}) {
+    SoundBoard.loadCollapseState();
     await SoundBoard.loadSoundsFromDirectory(game.settings.get('fvtt-noise_goblin_soundboard', 'soundboardDirectory'));
     await super.render(force, options);
     Hooks.once('renderSoundBoardApplication', async (app, html) => {
@@ -25,6 +26,18 @@ class SoundBoardApplication extends Application {
           const name = $(this).find('.sb-sound-name').text().toLowerCase();
           $(this).toggle(name.includes(query));
         });
+      });
+
+      html.find('.sb-collapse-all').on('click', function () {
+        SoundBoard.collapseAllFolders();
+        html.find('.sb-folder-toggle').addClass('collapsed');
+        html.find('.sb-folder-content').hide();
+      });
+
+      html.find('.sb-expand-all').on('click', function () {
+        SoundBoard.expandAllFolders();
+        html.find('.sb-folder-toggle').removeClass('collapsed');
+        html.find('.sb-folder-content').show();
       });
 
       html.find('.sb-fav-toggle').on('click', function () {
@@ -85,6 +98,13 @@ class SoundBoardApplication extends Application {
           SoundBoard.playingSounds[path] = newSound;
         });
       });
+
+      html.find('.sb-folder-toggle').on('click', function () {
+        const folderName = $(this).data('folder');
+        SoundBoard.toggleFolderCollapse(folderName);
+        $(this).toggleClass('collapsed');
+        html.find(`.sb-folder-content[data-folder="${folderName}"]`).toggle();
+      });
     });
   }
 
@@ -97,7 +117,8 @@ class SoundBoardApplication extends Application {
         sounds.push({
           categoryName: key,
           length: files.length,
-          files
+          files,
+          collapsed: SoundBoard.isFolderCollapsed(key) ?? true
         });
       }
     }

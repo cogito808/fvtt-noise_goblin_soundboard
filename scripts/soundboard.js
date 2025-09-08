@@ -27,6 +27,15 @@ Hooks.once('init', () => {
     type: Number,
     default: 1.0
   });
+
+  game.settings.register('fvtt-noise_goblin_soundboard', 'collapsedFolders', {
+    name: 'Collapsed Folders',
+    hint: 'Tracks which folders are collapsed.',
+    scope: 'client',
+    config: false,
+    type: Object,
+    default: {}
+  });
 });
 
 export const SoundBoard = {
@@ -38,6 +47,7 @@ export const SoundBoard = {
   volumeMode: 'default',
   loopingSounds: {},
   favorites: [],
+  collapsedFolders: {},
 
   async loadSoundsFromDirectory(directoryPath) {
     const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', directoryPath);
@@ -72,5 +82,32 @@ export const SoundBoard = {
     } else {
       this.favorites.push(path);
     }
+  },
+
+  toggleFolderCollapse(folderName) {
+    this.collapsedFolders[folderName] = !this.collapsedFolders[folderName];
+    game.settings.set('fvtt-noise_goblin_soundboard', 'collapsedFolders', this.collapsedFolders);
+  },
+
+  isFolderCollapsed(folderName) {
+    return this.collapsedFolders[folderName];
+  },
+
+  loadCollapseState() {
+    this.collapsedFolders = game.settings.get('fvtt-noise_goblin_soundboard', 'collapsedFolders') || {};
+  },
+
+  collapseAllFolders() {
+    for (const folder of Object.keys(this.sounds)) {
+      this.collapsedFolders[folder] = true;
+    }
+    game.settings.set('fvtt-noise_goblin_soundboard', 'collapsedFolders', this.collapsedFolders);
+  },
+
+  expandAllFolders() {
+    for (const folder of Object.keys(this.sounds)) {
+      this.collapsedFolders[folder] = false;
+    }
+    game.settings.set('fvtt-noise_goblin_soundboard', 'collapsedFolders', this.collapsedFolders);
   }
 };

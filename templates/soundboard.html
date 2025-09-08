@@ -1,26 +1,32 @@
 <div class="sb-header">
   <input type="text" class="sb-search-input" placeholder="Search sounds...">
+  <div class="sb-folder-controls">
+    <button class="sb-collapse-all">Collapse All</button>
+    <button class="sb-expand-all">Expand All</button>
+  </div>
 </div>
 
 {{#each sounds}}
 <div class="sb-sound-category">
-  <h3>{{categoryName}}</h3>
-  <div class="sb-sound-grid">
-    {{#each files}}
-    <div class="sb-sound-container">
-      <div class="sb-sound-row">
-        <span class="sb-sound-name">{{name}}</span>
-        <div class="sb-sound-controls">
-          <button class="sb-play-button" data-path="{{path}}">▶️</button>
-          <button class="sb-stop-button" data-path="{{path}}">⏹️</button>
-          <button class="sb-loop-toggle" data-path="{{path}}">🔁</button>
-          <button class="sb-fav-toggle" data-path="{{path}}">
-            <i class="far fa-star"></i>
-          </button>
+  <h3 class="sb-folder-toggle {{#if collapsed}}collapsed{{/if}}" data-folder="{{categoryName}}">{{categoryName}}</h3>
+  <div class="sb-folder-content" data-folder="{{categoryName}}" style="display: {{#if collapsed}}none{{else}}block{{/if}};">
+    <div class="sb-sound-grid">
+      {{#each files}}
+      <div class="sb-sound-container">
+        <div class="sb-sound-row">
+          <span class="sb-sound-name">{{name}}</span>
+          <div class="sb-sound-controls">
+            <button class="sb-play-button" data-path="{{path}}">▶️</button>
+            <button class="sb-stop-button" data-path="{{path}}">⏹️</button>
+            <button class="sb-loop-toggle" data-path="{{path}}">🔁</button>
+            <button class="sb-fav-toggle" data-path="{{path}}">
+              <i class="far fa-star"></i>
+            </button>
+          </div>
         </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
   </div>
 </div>
 {{/each}}
