@@ -1,4 +1,8 @@
 <div class="sb-header">
+  <div class="sb-tabs">
+    <button class="sb-tab {{#if tab.main}}active{{/if}}" data-tab="main">All Sounds</button>
+    <button class="sb-tab {{#if tab.favorites}}active{{/if}}" data-tab="favorites">⭐ Favorites</button>
+  </div>
   <input type="text" class="sb-search-input" placeholder="Search sounds...">
   <div class="sb-folder-controls">
     <button class="sb-collapse-all">Collapse All</button>

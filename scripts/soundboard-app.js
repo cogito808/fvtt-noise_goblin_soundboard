@@ -14,11 +14,32 @@ class SoundBoardApplication extends Application {
 
   async render(force = false, options = {}) {
     SoundBoard.loadCollapseState();
+    SoundBoard.loadFavorites();
     await SoundBoard.loadSoundsFromDirectory(game.settings.get('fvtt-noise_goblin_soundboard', 'soundboardDirectory'));
     await super.render(force, options);
     Hooks.once('renderSoundBoardApplication', async (app, html) => {
       const opacity = game.settings.get('fvtt-noise_goblin_soundboard', 'opacity');
       html.css('opacity', opacity);
+
+      // Tab switching
+      html.find('.sb-tab').on('click', async function () {
+        const tab = $(this).data('tab');
+        app.activeTab = tab;
+        html.find('.sb-tab').removeClass('active');
+        $(this).addClass('active');
+        await app.render(true);
+      });
+
+      // Initialize favorite button states
+      html.find('.sb-fav-toggle').each(function () {
+        const path = $(this).data('path');
+        if (SoundBoard.isFavorite(path)) {
+          $(this).addClass('active');
+          $(this).html('<i class="fas fa-star"></i>');
+        } else {
+          $(this).html('<i class="far fa-star"></i>');
+        }
+      });
 
       html.find('.sb-search-input').on('input', function () {
         const query = $(this).val().toLowerCase();
@@ -44,6 +65,11 @@ class SoundBoardApplication extends Application {
         const path = $(this).data('path');
         SoundBoard.toggleFavorite(path);
         $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+          $(this).html('<i class="fas fa-star"></i>');
+        } else {
+          $(this).html('<i class="far fa-star"></i>');
+        }
       });
 
       html.find('.sb-stop-button').on('click', function () {
@@ -109,17 +135,49 @@ class SoundBoardApplication extends Application {
   }
 
   getData() {
-    const sounds = [];
+    SoundBoard.loadFavorites();
+    
+    // Determine which tab is active
+    const activeTab = this.activeTab || 'main';
+    
+    let sounds = [];
     let totalCount = 0;
-    for (const [key, files] of Object.entries(SoundBoard.sounds)) {
-      totalCount += files.length;
-      if (files.length > 0) {
-        sounds.push({
-          categoryName: key,
-          length: files.length,
-          files,
-          collapsed: SoundBoard.isFolderCollapsed(key) ?? true
-        });
+
+    if (activeTab === 'favorites') {
+      // Favorites view: group favorited sounds by category
+      const favoritesByCategory = {};
+      
+      for (const [category, files] of Object.entries(SoundBoard.sounds)) {
+        const favoriteFiles = files.filter(f => SoundBoard.isFavorite(f.path));
+        if (favoriteFiles.length > 0) {
+          favoritesByCategory[category] = favoriteFiles;
+          totalCount += favoriteFiles.length;
+        }
+      }
+      
+      // Convert to array format
+      for (const [key, files] of Object.entries(favoritesByCategory)) {
+        if (files.length > 0) {
+          sounds.push({
+            categoryName: key,
+            length: files.length,
+            files,
+            collapsed: false
+          });
+        }
+      }
+    } else {
+      // Main view: show all sounds
+      for (const [key, files] of Object.entries(SoundBoard.sounds)) {
+        totalCount += files.length;
+        if (files.length > 0) {
+          sounds.push({
+            categoryName: key,
+            length: files.length,
+            files,
+            collapsed: SoundBoard.isFolderCollapsed(key) ?? true
+          });
+        }
       }
     }
 
@@ -134,7 +192,7 @@ class SoundBoardApplication extends Application {
     const isExampleAudio = game.settings.get('fvtt-noise_goblin_soundboard', 'soundboardDirectory') === game.settings.settings.get('fvtt-noise_goblin_soundboard.soundboardDirectory').default;
 
     return {
-      tab: { main: true },
+      tab: { main: activeTab === 'main', favorites: activeTab === 'favorites' },
       sounds,
       volume,
       totalCount,

@@ -39,9 +39,13 @@
 .sb-sound-name {
   font-weight: bold;
   color: #fff;
-  white-space: nowrap;
+  word-break: break-word;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3em;
+  min-height: 2.6em;
 }
 
 .sb-sound-controls {
@@ -74,6 +78,35 @@
   margin-bottom: 1em;
 }
 
+.sb-tabs {
+  display: flex;
+  gap: 0.5em;
+  margin-bottom: 0.75em;
+  border-bottom: 2px solid #444;
+}
+
+.sb-tab {
+  padding: 0.5em 1em;
+  border: none;
+  background-color: transparent;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.sb-tab:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sb-tab.active {
+  color: #fff;
+  border-bottom-color: #007bff;
+}
+
 .sb-search-input {
   width: 100%;
   padding: 0.5em;
@@ -81,6 +114,7 @@
   border: 1px solid #444;
   background-color: #1e1e1e;
   color: #fff;
+  margin-bottom: 0.5em;
 }
 .sb-folder-controls {
   display: flex;
