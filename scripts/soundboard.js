@@ -46,6 +46,15 @@ Hooks.once('init', () => {
     default: []
   });
 
+  game.settings.register('fvtt-noise_goblin_soundboard', 'windowPosition', {
+    name: 'Soundboard Window Position',
+    hint: 'Remembers the last window size and position.',
+    scope: 'client',
+    config: false,
+    type: Object,
+    default: { left: 100, top: 100, width: 1000, height: 740 }
+  });
+
   game.settings.register('fvtt-noise_goblin_soundboard', 'compactMode', {
     name: 'Compact Layout',
     hint: 'Toggle compact/condensed sound card layout (client setting).',

@@ -9,6 +9,8 @@ class SoundBoardApplication extends Application {
     options.id = 'soundboard-app';
     options.template = 'modules/fvtt-noise_goblin_soundboard/templates/soundboard.html';
     options.resizable = true;
+    options.width = 1000;
+    options.height = 740;
     return options;
   }
 
@@ -16,7 +18,18 @@ class SoundBoardApplication extends Application {
     SoundBoard.loadCollapseState();
     SoundBoard.loadFavorites();
     await SoundBoard.loadSoundsFromDirectory(game.settings.get('fvtt-noise_goblin_soundboard', 'soundboardDirectory'));
+    
+    // Restore saved window position and size if available
+    const savedPosition = game.settings.get('fvtt-noise_goblin_soundboard', 'windowPosition');
+    if (savedPosition && !options.left && !options.top) {
+      options.left = savedPosition.left;
+      options.top = savedPosition.top;
+      options.width = savedPosition.width;
+      options.height = savedPosition.height;
+    }
+    
     await super.render(force, options);
+    
     Hooks.once('renderSoundBoardApplication', async (app, html) => {
       const opacity = game.settings.get('fvtt-noise_goblin_soundboard', 'opacity');
       html.css('opacity', opacity);
@@ -78,6 +91,15 @@ class SoundBoardApplication extends Application {
         if (sound && typeof sound.stop === 'function') {
           sound.stop();
           delete SoundBoard.playingSounds[path];
+          
+          // Pulse animation on stop button
+          $(this).addClass('pulse');
+          setTimeout(() => {
+            $(this).removeClass('pulse');
+          }, 600);
+          
+          // Remove active state from play button
+          html.find(`.sb-play-button[data-path="${path}"]`).removeClass('active');
         } else {
           console.warn(`No valid sound instance found for path: ${path}`);
         }
@@ -85,9 +107,34 @@ class SoundBoardApplication extends Application {
 
       html.find('.sb-play-button').on('click', async function () {
         const path = $(this).data('path');
+        const button = $(this);
         const loop = SoundBoard.loopingSounds?.[path] ?? false;
         const sound = await foundry.audio.AudioHelper.play({src: path, volume: 1.0, autoplay: true, loop}, true);
         SoundBoard.playingSounds[path] = sound;
+        
+        // Add active state to play button
+        button.addClass('active');
+        
+        // Monitor sound playback and remove active state when done
+        if (sound) {
+          const checkPlayback = setInterval(() => {
+            // Check if sound is still playing
+            if (!SoundBoard.playingSounds[path] || !sound.playing) {
+              button.removeClass('active');
+              clearInterval(checkPlayback);
+            }
+          }, 100);
+          
+          // Also clear on stop
+          if (sound.stop) {
+            const originalStop = sound.stop.bind(sound);
+            sound.stop = function() {
+              originalStop();
+              button.removeClass('active');
+              clearInterval(checkPlayback);
+            };
+          }
+        }
       });
 
       html.find('.sb-loop-toggle').each(function () {
@@ -112,6 +159,7 @@ class SoundBoardApplication extends Application {
           if (currentSound && typeof currentSound.stop === 'function') {
             currentSound.stop();
             delete SoundBoard.playingSounds[path];
+            html.find(`.sb-play-button[data-path="${path}"]`).removeClass('active');
           }
 
           const newSound = await foundry.audio.AudioHelper.play({
@@ -122,6 +170,7 @@ class SoundBoardApplication extends Application {
           }, true);
 
           SoundBoard.playingSounds[path] = newSound;
+          html.find(`.sb-play-button[data-path="${path}"]`).addClass('active');
         });
       });
 
@@ -204,6 +253,22 @@ class SoundBoardApplication extends Application {
       volumeMode: SoundBoard.volumeMode,
       isExampleAudio
     };
+  }
+
+  setPosition(position = {}) {
+    // Only call super if element exists to avoid errors
+    if (this.element && this.element.length > 0) {
+      super.setPosition(position);
+      
+      // Save window position
+      const pos = {
+        left: this.position.left,
+        top: this.position.top,
+        width: this.position.width,
+        height: this.position.height
+      };
+      game.settings.set('fvtt-noise_goblin_soundboard', 'windowPosition', pos);
+    }
   }
 }
 
