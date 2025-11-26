@@ -36,6 +36,24 @@ Hooks.once('init', () => {
     type: Object,
     default: {}
   });
+
+  game.settings.register('fvtt-noise_goblin_soundboard', 'favorites', {
+    name: 'Soundboard Favorites',
+    hint: 'Persisted list of favorite sound paths for this client.',
+    scope: 'client',
+    config: false,
+    type: Object,
+    default: []
+  });
+
+  game.settings.register('fvtt-noise_goblin_soundboard', 'compactMode', {
+    name: 'Compact Layout',
+    hint: 'Toggle compact/condensed sound card layout (client setting).',
+    scope: 'client',
+    config: true,
+    type: Boolean,
+    default: false
+  });
 });
 
 export const SoundBoard = {
@@ -48,6 +66,26 @@ export const SoundBoard = {
   loopingSounds: {},
   favorites: [],
   collapsedFolders: {},
+
+  loadFavorites() {
+    try {
+      this.favorites = game.settings.get('fvtt-noise_goblin_soundboard', 'favorites') || [];
+    } catch (err) {
+      this.favorites = [];
+    }
+  },
+
+  saveFavorites() {
+    try {
+      game.settings.set('fvtt-noise_goblin_soundboard', 'favorites', this.favorites || []);
+    } catch (err) {
+      console.warn('Failed to save favorites', err);
+    }
+  },
+
+  isFavorite(path) {
+    return (this.favorites || []).includes(path);
+  },
 
   async loadSoundsFromDirectory(directoryPath) {
     const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', directoryPath);
@@ -77,11 +115,13 @@ export const SoundBoard = {
   },
 
   toggleFavorite(path) {
+    if (!path) return;
     if (this.favorites.includes(path)) {
       this.favorites = this.favorites.filter(p => p !== path);
     } else {
       this.favorites.push(path);
     }
+    this.saveFavorites();
   },
 
   toggleFolderCollapse(folderName) {
