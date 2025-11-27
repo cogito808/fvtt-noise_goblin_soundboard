@@ -30,24 +30,31 @@ A feature-rich (i.e. vibe coded) soundboard module for Foundry VTT v13. Organize
 - Default: 1.0 (100%)
 
 ### Opening the Soundboard
-Two ready-to-use macros are available in the module folder:
 
-**⭐ Soundboard Favorites** - Opens directly to your favorites
-**🔊 Soundboard All Sounds** - Opens to the full sound library
+Two ready-to-use macros are included in the module folder:
 
-#### How to Import Macros (Simple Copy-Paste Method)
+#### 🔊 Soundboard All Sounds
+Opens the soundboard to the All Sounds tab showing your complete sound library.
 ```javascript
 const app = new SoundBoardApplication();
+app.activeTab = 'main';
 await app.render(true);
-app.activeTab = 'main';  // or 'favorites' for favorited sounds
+```
+
+#### ⭐ Soundboard Favorites
+Opens the soundboard directly to the Favorites tab showing only your favorited sounds.
+```javascript
+const app = new SoundBoardApplication();
+app.activeTab = 'favorites';
+await app.render(true);
 ```
 
 ## Credits
 
-**Original Author:** BlitzKraig - For the original [fvtt-SoundBoard](https://github.com/BlitzKraig/fvtt-SoundBoard) that inspired this module.
-**Current Development:** Probably not
-**Support & Feedback:** Unlikely
-**License:** Please refer to the module's license file for licensing information.
+-**Original Author:** BlitzKraig - For the original [fvtt-SoundBoard](https://github.com/BlitzKraig/fvtt-SoundBoard) that inspired this module.
+-**Current Development:** Probably not
+-**Support & Feedback:** Unlikely
+-**License:** Please refer to the module's license file for licensing information.
 
 ---
 

@@ -3,5 +3,5 @@
 // It will open the soundboard and navigate to the Favorites tab
 
 const app = new SoundBoardApplication();
-await app.render(true);
 app.activeTab = 'favorites';
+await app.render(true);
