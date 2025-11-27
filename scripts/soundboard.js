@@ -54,15 +54,6 @@ Hooks.once('init', () => {
     type: Object,
     default: { left: 100, top: 100, width: 1000, height: 740 }
   });
-
-  game.settings.register('fvtt-noise_goblin_soundboard', 'compactMode', {
-    name: 'Compact Layout',
-    hint: 'Toggle compact/condensed sound card layout (client setting).',
-    scope: 'client',
-    config: true,
-    type: Boolean,
-    default: false
-  });
 });
 
 export const SoundBoard = {

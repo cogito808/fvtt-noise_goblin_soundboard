@@ -1,7 +1,7 @@
 {
   "id": "fvtt-noise_goblin_soundboard",
   "title": "Noise Goblin Soundboard",
-  "description": "Soundboard",
+  "description": "A feature-rich soundboard for Foundry VTT v13 with favorites, looping, and responsive UI",
   "version": "1.0.0",
   "type": "module",
   "esmodules": [
@@ -46,6 +46,6 @@
     "verified": "13.347",
     "maximum": "13"
   },
-  "manifest": "https://your-host.com/module.json",
-  "download": "https://your-host.com/combat-sound.zip"
+  "manifest": "https://raw.githubusercontent.com/cogito808/fvtt-noise_goblin_soundboard/main/module.json",
+  "download": "https://github.com/cogito808/fvtt-noise_goblin_soundboard/archive/refs/heads/main.zip"
 }
