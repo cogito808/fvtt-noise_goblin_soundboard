@@ -19,7 +19,7 @@ A feature-rich (i.e. vibe coded) soundboard module for Foundry VTT v13. Organize
 **Soundboard Directory**
 - Set the path to your sound files folder
 - Default: `assets/sounds`
-- Create subdirectories to organize sounds by category, only one folder deep ATM
+- Create subdirectories to organize sounds by category
 
 **Soundboard Opacity**
 - Adjust window transparency (0.0 - 1.0)
@@ -50,11 +50,10 @@ await app.render(true);
 ```
 
 ## Credits
-
--**Original Author:** BlitzKraig - For the original [fvtt-SoundBoard](https://github.com/BlitzKraig/fvtt-SoundBoard) that inspired this module.
--**Current Development:** Probably not
--**Support & Feedback:** Unlikely
--**License:** Please refer to the module's license file for licensing information.
+- Original Author: BlitzKraig - For the original [fvtt-SoundBoard](https://github.com/BlitzKraig/fvtt-SoundBoard) that inspired this module.
+- Current Development: Probably not.
+- Support & Feedback: Unlikely.
+- License: Please refer to the module's license file for licensing information.
 
 ---
 
