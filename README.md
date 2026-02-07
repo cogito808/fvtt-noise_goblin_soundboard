@@ -51,9 +51,6 @@ await app.render(true);
 
 ## Credits
 - Original Author: BlitzKraig - For the original [fvtt-SoundBoard](https://github.com/BlitzKraig/fvtt-SoundBoard) that inspired this module.
-
-- Current Development: Probably not.
-
-- Support & Feedback: Unlikely.
-
 - License: Please refer to the module's license file for licensing information.
+- Current Development: Probably not..
+- Support & Feedback: Unlikely.
