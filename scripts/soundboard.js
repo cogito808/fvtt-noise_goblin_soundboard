@@ -89,26 +89,56 @@ export const SoundBoard = {
 
   async loadSoundsFromDirectory(directoryPath) {
     try {
-      const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', directoryPath);
-      const folders = filePicker.dirs;
       const sounds = {};
-
-      for (const folder of folders) {
-        const folderPicker = await foundry.applications.apps.FilePicker.implementation.browse('data', folder);
-        const files = folderPicker.files.filter(f => f.endsWith('.mp3') || f.endsWith('.ogg') || f.endsWith('.wav'));
-        const fileObjects = files.map(f => ({
-          name: decodeURIComponent(f.split('/').pop()),
-          path: f
-        }));
-        sounds[folder.split('/').pop()] = fileObjects;
-      }
-
+      await this._recursiveScanDirectory(directoryPath, sounds, '');
       this.sounds = sounds;
       console.log('Loaded sounds:', this.sounds);
     } catch (err) {
       console.warn(`Failed to load sounds from directory "${directoryPath}":`, err);
       ui.notifications.warn(`Soundboard: Could not access directory "${directoryPath}". Please check your soundboard directory setting.`);
       this.sounds = {};
+    }
+  },
+
+  async _recursiveScanDirectory(folderPath, sounds, parentKey) {
+    try {
+      const filePicker = await foundry.applications.apps.FilePicker.implementation.browse('data', folderPath);
+      const files = filePicker.files.filter(f => f.endsWith('.mp3') || f.endsWith('.ogg') || f.endsWith('.wav'));
+      
+      // Add sound files from this directory
+      if (files.length > 0) {
+        const fileObjects = files.map(f => ({
+          name: decodeURIComponent(f.split('/').pop()),
+          path: f
+        }));
+        const folderName = folderPath.split('/').pop() || 'root';
+        
+        // Avoid duplicate folder names in the path
+        let key;
+        if (parentKey && parentKey.endsWith(folderName)) {
+          key = parentKey;
+        } else {
+          key = parentKey ? `${parentKey}/${folderName}` : folderName;
+        }
+        sounds[key] = fileObjects;
+      }
+      
+      // Recursively scan subdirectories
+      const folders = filePicker.dirs;
+      for (const subfolder of folders) {
+        const folderName = subfolder.split('/').pop();
+        
+        // Avoid duplicate folder names in the path
+        let newParentKey;
+        if (parentKey && parentKey.endsWith(folderName)) {
+          newParentKey = parentKey;
+        } else {
+          newParentKey = parentKey ? `${parentKey}/${folderName}` : folderName;
+        }
+        await this._recursiveScanDirectory(subfolder, sounds, newParentKey);
+      }
+    } catch (err) {
+      console.warn(`Failed to scan directory "${folderPath}":`, err);
     }
   },
 
