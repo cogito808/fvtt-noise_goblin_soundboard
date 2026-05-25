@@ -1,4 +1,5 @@
 // scripts/soundboard.js
+// one wonders who really made this
 
 Hooks.once('init', () => {
   game.settings.register('fvtt-noise_goblin_soundboard', 'soundboardDirectory', {

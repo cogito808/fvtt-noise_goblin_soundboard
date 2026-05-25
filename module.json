@@ -3,49 +3,21 @@
   "title": "Noise Goblin Soundboard",
   "description": "A feature-rich soundboard for Foundry VTT v13 with favorites, looping, and responsive UI",
   "version": "1.0.0",
-  "type": "module",
   "esmodules": [
     "scripts/soundboard.js",
     "scripts/soundboard-app.js"
   ],
   "styles": [
-    "styles/style.css"
-  ],
-  "template": "templates/soundboard.html",
-  "settings": [
     {
-      "key": "soundboardDirectory",
-      "name": "Soundboard Directory",
-      "hint": "Path to the folder containing sound files.",
-      "scope": "world",
-      "config": true,
-      "type": "String",
-      "default": "assets/sounds"
-    },
-    {
-      "key": "opacity",
-      "name": "Soundboard Opacity",
-      "hint": "Set the opacity of the soundboard window.",
-      "scope": "client",
-      "config": true,
-      "type": "Number",
-      "default": 1.0
-    },
-    {
-      "key": "soundboardServerVolume",
-      "name": "Server Volume",
-      "hint": "Default volume level for sounds.",
-      "scope": "world",
-      "config": true,
-      "type": "Number",
-      "default": 1.0
+      "src": "styles/style.css"
     }
   ],
   "compatibility": {
     "minimum": "13.344",
-    "verified": "13.347",
-    "maximum": "13"
+    "verified": "14.360",
+    "maximum": "14"
   },
   "manifest": "https://raw.githubusercontent.com/cogito808/fvtt-noise_goblin_soundboard/main/module.json",
-  "download": "https://github.com/cogito808/fvtt-noise_goblin_soundboard/archive/refs/heads/main.zip"
+  "download": "https://github.com/cogito808/fvtt-noise_goblin_soundboard/archive/refs/heads/main.zip",
+  "flags": {}
 }
